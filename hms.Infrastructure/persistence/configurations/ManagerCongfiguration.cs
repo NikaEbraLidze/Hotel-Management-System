@@ -1,4 +1,8 @@
-namespace hms.Infrastructure.persistence.configurations
+using hms.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace hms.Infrastructure.Persistence.Configurations
 {
     public class ManagerConfiguration : IEntityTypeConfiguration<Manager>
     {
@@ -20,9 +24,9 @@ namespace hms.Infrastructure.persistence.configurations
             builder.HasIndex(x => x.PhoneNumber).IsUnique();
 
             // Relationships
-            builder.HasMany(m => m.Hotel)
-                .WithOne(h => h.Managers)
-                .HasForeignKey(r => r.HotelId)
+            builder.HasOne(m => m.Hotel)
+                .WithMany(h => h.Managers)
+                .HasForeignKey(m => m.HotelId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasIndex(x => x.HotelId);

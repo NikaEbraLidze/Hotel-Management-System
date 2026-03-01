@@ -1,4 +1,8 @@
-namespace hms.Infrastructure.persistence.configurations
+using hms.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace hms.Infrastructure.Persistence.Configurations
 {
     public class RoomConfiguration : IEntityTypeConfiguration<Room>
     {
@@ -7,7 +11,7 @@ namespace hms.Infrastructure.persistence.configurations
             builder.ToTable("Rooms");
 
             builder.HasKey(r => r.Id);
-            builder.Property(r => r.Number).IsRequired().HasMaxLength(10);
+            builder.Property(r => r.Name).IsRequired().HasMaxLength(10);
             builder.Property(r => r.Price).IsRequired().HasColumnType("decimal(18,2)");
 
             builder.Property(x => x.HotelId)

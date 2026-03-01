@@ -1,4 +1,8 @@
-namespace hms.Infrastructure.persistence.configurations
+using hms.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace hms.Infrastructure.Persistence.Configurations
 {
     public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
     {

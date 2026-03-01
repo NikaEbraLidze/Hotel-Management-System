@@ -1,2 +1,6 @@
 <Solution>
+  <Project Path="hms.Api/hms.Api.csproj" />
+  <Project Path="hms.Application/hms.Application.csproj" />
+  <Project Path="hms.Domain/hms.Domain.csproj" />
+  <Project Path="hms.Infrastructure/hms.Infrastructure.csproj" />
 </Solution>

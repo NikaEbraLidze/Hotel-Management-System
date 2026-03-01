@@ -1,4 +1,8 @@
-namespace hms.Infrastructure.persistence.configurations
+using hms.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace hms.Infrastructure.Persistence.Configurations
 {
     public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
     {
@@ -19,8 +23,8 @@ namespace hms.Infrastructure.persistence.configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(h => h.Managers)
-                .WithOne(r => r.Hotel)
-                .HasForeignKey(r => r.ManagerId)
+                .WithOne(m => m.Hotel)
+                .HasForeignKey(m => m.HotelId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // rating check constraint (SQL Server)

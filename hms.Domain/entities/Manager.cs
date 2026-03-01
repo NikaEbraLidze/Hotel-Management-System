@@ -1,4 +1,4 @@
-namespace hms.Domain.entities
+namespace hms.Domain.Entities
 {
     public class Manager
     {

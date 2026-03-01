@@ -1,4 +1,8 @@
-namespace hms.Infrastructure.persistence
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using hms.Domain.Entities;
+
+namespace hms.Infrastructure.Persistence
 {
     public class HmsDbContext : DbContext
     {

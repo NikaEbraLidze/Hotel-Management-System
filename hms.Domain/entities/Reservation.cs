@@ -1,4 +1,4 @@
-namespace hms.Domain.entities
+namespace hms.Domain.Entities
 {
     public class Reservation
     {
@@ -9,5 +9,7 @@ namespace hms.Domain.entities
         // FK
         public Guid GuestId { get; set; }
         public Guest Guest { get; set; }
+
+        public ICollection<ReservationRoom> ReservationRooms { get; set; } = new List<ReservationRoom>();
     }
 }
