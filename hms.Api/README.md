@@ -2,6 +2,9 @@
 
 ეს დოკუმენტი არის პრაქტიკული გეგმა `hms.Api` პროექტის სწორად აწყობისთვის Clean Architecture სტილში.
 
+dotnet ef migrations add InitialCreate --project ../hms.Infrastructure --startup-project .
+dotnet ef database update --project ../hms.Infrastructure --startup-project .
+
 ## 1. არქიტექტურა და Solution სტრუქტურა
 
 პროექტები:
