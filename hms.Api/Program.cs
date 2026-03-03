@@ -9,12 +9,14 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using hms.Infrastructure.Persistence.Identity;
 using System;
+using System.Threading.Tasks;
+using hms.Infrastructure.Persistence.Seeding;
 
 namespace hms.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -71,7 +73,8 @@ namespace hms.Api
             {
                 using var scope = app.Services.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<HmsDbContext>();
-                db.Database.Migrate();
+                await db.Database.MigrateAsync();
+                await HmsDbSeeder.SeedAsync(app.Services);
             }
 
             app.UseHttpsRedirection();
@@ -80,7 +83,7 @@ namespace hms.Api
             app.MapControllers();
             #endregion
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }
