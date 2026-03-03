@@ -5,6 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
+using hms.Infrastructure.Persistence.Identity;
+using System;
 
 namespace hms.Api
 {
@@ -40,6 +44,20 @@ namespace hms.Api
             });
             #endregion
 
+            #region Identity
+
+            builder.Services
+                .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+                {
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                })
+                .AddEntityFrameworkStores<HmsDbContext>()
+                .AddDefaultTokenProviders();
+
+            #endregion
+
             var app = builder.Build();
 
             #region Middleware Pipeline
@@ -57,6 +75,7 @@ namespace hms.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             #endregion

@@ -1,10 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using hms.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using hms.Infrastructure.Persistence.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace hms.Infrastructure.Persistence
 {
-    public class HmsDbContext : DbContext
+    public class HmsDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public HmsDbContext(DbContextOptions<HmsDbContext> options) : base(options) { }
 
@@ -23,6 +26,5 @@ namespace hms.Infrastructure.Persistence
             // Automatically apply all IEntityTypeConfiguration<> from this assembly
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(HmsDbContext).Assembly);
         }
-
     }
 }
