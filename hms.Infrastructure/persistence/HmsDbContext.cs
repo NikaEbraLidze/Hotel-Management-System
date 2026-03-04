@@ -1,9 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using hms.Domain.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using hms.Infrastructure.Persistence.Identity;
+using hms.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace hms.Infrastructure.Persistence
 {
@@ -12,12 +11,10 @@ namespace hms.Infrastructure.Persistence
         public HmsDbContext(DbContextOptions<HmsDbContext> options) : base(options) { }
 
         public DbSet<Hotel> Hotels => Set<Hotel>();
+        public DbSet<HotelManager> HotelManagers => Set<HotelManager>();
         public DbSet<Room> Rooms => Set<Room>();
-        public DbSet<Manager> Managers => Set<Manager>();
         public DbSet<Reservation> Reservations => Set<Reservation>();
         public DbSet<ReservationRoom> ReservationRooms => Set<ReservationRoom>();
-        public DbSet<Guest> Guests => Set<Guest>();
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

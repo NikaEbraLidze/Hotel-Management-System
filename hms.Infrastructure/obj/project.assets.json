@@ -1466,7 +1466,7 @@
         "dependencies": {
           "AutoMapper": "12.0.1",
           "FluentValidation": "11.9.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.3",
           "hms.Domain": "1.0.0"
         },
         "compile": {
@@ -1479,6 +1479,9 @@
       "hms.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Microsoft.Extensions.Identity.Stores": "10.0.3"
+        },
         "compile": {
           "bin/placeholder/hms.Domain.dll": {}
         },

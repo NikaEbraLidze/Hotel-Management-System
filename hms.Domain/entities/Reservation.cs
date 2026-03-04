@@ -1,3 +1,5 @@
+using hms.Domain.Identity;
+
 namespace hms.Domain.Entities
 {
     public class Reservation
@@ -8,7 +10,7 @@ namespace hms.Domain.Entities
         public DateTime CheckOutDate { get; set; }
         // FK
         public Guid GuestId { get; set; }
-        public Guest Guest { get; set; }
+        public ApplicationUser Guest { get; set; }
 
         public ICollection<ReservationRoom> ReservationRooms { get; set; } = new List<ReservationRoom>();
     }

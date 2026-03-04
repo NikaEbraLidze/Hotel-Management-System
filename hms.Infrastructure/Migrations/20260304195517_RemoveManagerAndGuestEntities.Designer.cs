@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hms.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using hms.Infrastructure.Persistence;
 namespace hms.Infrastructure.Migrations
 {
     [DbContext(typeof(HmsDbContext))]
-    partial class HmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260304195517_RemoveManagerAndGuestEntities")]
+    partial class RemoveManagerAndGuestEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,21 +186,6 @@ namespace hms.Infrastructure.Migrations
                         {
                             t.HasCheckConstraint("CK_Hotels_Rating", "[Rating] >= 1 AND [Rating] <= 5");
                         });
-                });
-
-            modelBuilder.Entity("hms.Domain.Entities.HotelManager", b =>
-                {
-                    b.Property<Guid>("HotelId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ManagerUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("HotelId", "ManagerUserId");
-
-                    b.HasIndex("ManagerUserId");
-
-                    b.ToTable("HotelManagers", (string)null);
                 });
 
             modelBuilder.Entity("hms.Domain.Entities.Reservation", b =>
@@ -390,25 +378,6 @@ namespace hms.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("hms.Domain.Entities.HotelManager", b =>
-                {
-                    b.HasOne("hms.Domain.Entities.Hotel", "Hotel")
-                        .WithMany("HotelManagers")
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("hms.Domain.Identity.ApplicationUser", "ManagerUser")
-                        .WithMany("ManagedHotels")
-                        .HasForeignKey("ManagerUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Hotel");
-
-                    b.Navigation("ManagerUser");
-                });
-
             modelBuilder.Entity("hms.Domain.Entities.Reservation", b =>
                 {
                     b.HasOne("hms.Domain.Identity.ApplicationUser", "Guest")
@@ -452,8 +421,6 @@ namespace hms.Infrastructure.Migrations
 
             modelBuilder.Entity("hms.Domain.Entities.Hotel", b =>
                 {
-                    b.Navigation("HotelManagers");
-
                     b.Navigation("Rooms");
                 });
 
@@ -465,11 +432,6 @@ namespace hms.Infrastructure.Migrations
             modelBuilder.Entity("hms.Domain.Entities.Room", b =>
                 {
                     b.Navigation("ReservationRooms");
-                });
-
-            modelBuilder.Entity("hms.Domain.Identity.ApplicationUser", b =>
-                {
-                    b.Navigation("ManagedHotels");
                 });
 #pragma warning restore 612, 618
         }

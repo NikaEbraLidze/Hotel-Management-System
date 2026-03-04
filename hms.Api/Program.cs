@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
-using hms.Infrastructure.Persistence.Identity;
+using hms.Domain.Identity;
 using System;
 using System.Threading.Tasks;
 using hms.Infrastructure.Persistence.Seeding;

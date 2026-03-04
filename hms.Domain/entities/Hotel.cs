@@ -10,6 +10,6 @@ namespace hms.Domain.Entities
         public string City { get; set; }
         // Navigation properties  
         public ICollection<Room> Rooms { get; set; } = new List<Room>();
-        public ICollection<Manager> Managers { get; set; } = new List<Manager>();
+        public ICollection<HotelManager> HotelManagers { get; set; } = new List<HotelManager>();
     }
 }

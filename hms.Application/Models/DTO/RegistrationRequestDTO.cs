@@ -1,14 +1,12 @@
-namespace hms.Domain.Entities
+namespace hms.Application.Models.DTO
 {
-    public class Guest
+    public class RegistrationRequestDTO
     {
-        // PK
-        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
         public string PersonalNumber { get; set; }
         public string PhoneNumber { get; set; }
-
-        public ICollection<Reservation> Reservations { get; set; }
     }
 }

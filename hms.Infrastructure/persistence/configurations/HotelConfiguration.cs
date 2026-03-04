@@ -22,11 +22,6 @@ namespace hms.Infrastructure.Persistence.Configurations
                 .HasForeignKey(r => r.HotelId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(h => h.Managers)
-                .WithOne(m => m.Hotel)
-                .HasForeignKey(m => m.HotelId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             // rating check constraint (SQL Server)
             builder.ToTable(t =>
             {

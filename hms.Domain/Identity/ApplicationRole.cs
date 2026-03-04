@@ -1,4 +1,4 @@
-namespace hms.Infrastructure.Persistence.Identity
+namespace hms.Domain.Identity
 {
     public enum AppRole
     {

@@ -22,7 +22,7 @@ namespace hms.Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             builder.HasOne(x => x.Guest)
-                .WithMany(g => g.Reservations)
+                .WithMany()
                 .HasForeignKey(x => x.GuestId)
                 .OnDelete(DeleteBehavior.Restrict);
 
