@@ -16,7 +16,7 @@ public interface IUserRepository
     Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
 
     Task<IList<string>> GetRolesAsync(ApplicationUser user);
-    Task AddToRoleAsync(ApplicationUser user, string role);
+    Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string role);
     Task RemoveFromRoleAsync(ApplicationUser user, string role);
 
     Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user);

@@ -13,7 +13,7 @@ namespace hms.Infrastructure.Repository
             _userManager = userManager;
         }
 
-        public Task AddToRoleAsync(ApplicationUser user, string role) => _userManager.AddToRoleAsync(user, role);
+        public Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string role) => _userManager.AddToRoleAsync(user, role);
 
         public Task<bool> CheckPasswordAsync(ApplicationUser user, string password) => _userManager.CheckPasswordAsync(user, password);
 

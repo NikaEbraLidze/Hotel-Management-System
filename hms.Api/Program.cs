@@ -11,6 +11,15 @@ using hms.Domain.Identity;
 using System;
 using System.Threading.Tasks;
 using hms.Infrastructure.Persistence.Seeding;
+using hms.Infrastructure.Repository;
+using hms.Application.Contracts.Service;
+using hms.Application.Services;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Mapster;
+using MapsterMapper;
+using hms.Application.Mapping;
 
 namespace hms.Api
 {
@@ -22,6 +31,14 @@ namespace hms.Api
 
             #region Controllers
             builder.Services.AddControllers();
+            #endregion
+
+            #region Mapster
+            var mapsterConfig = new TypeAdapterConfig();
+            mapsterConfig.Scan(typeof(MappingAssemblyMarker).Assembly);
+
+            builder.Services.AddSingleton(mapsterConfig);
+            builder.Services.AddScoped<MapsterMapper.IMapper, ServiceMapper>();
             #endregion
 
             #region Swagger
@@ -47,7 +64,6 @@ namespace hms.Api
             #endregion
 
             #region Identity
-
             builder.Services
                 .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
                 {
@@ -57,7 +73,47 @@ namespace hms.Api
                 })
                 .AddEntityFrameworkStores<HmsDbContext>()
                 .AddDefaultTokenProviders();
+            #endregion
 
+            #region Repositories
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            #endregion
+
+            #region Services
+            builder.Services.AddScoped<IJWTTokenGenerator, JWTTokenGenerator>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            #endregion
+
+            #region JWT Authentication
+            var issuer = builder.Configuration["JwtOptions:Issuer"];
+            var secret = builder.Configuration["JwtOptions:Secret"];
+            var audience = builder.Configuration["JwtOptions:Audience"];
+            var key = Encoding.ASCII.GetBytes(secret);
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidIssuer = issuer,
+                    ValidAudience = audience
+                };
+            });
+
+            builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromHours(3);
+            });
             #endregion
 
             var app = builder.Build();
