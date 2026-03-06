@@ -14,10 +14,10 @@ namespace hms.Infrastructure.Persistence.Seeding
     {
         private static readonly Guid HotelId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         private static readonly Guid RoomId = Guid.Parse("22222222-2222-2222-2222-222222222222");
-        private static readonly Guid ManagerUserId = Guid.Parse("33333333-3333-3333-3333-333333333333");
-        private static readonly Guid GuestUserId = Guid.Parse("44444444-4444-4444-4444-444444444444");
         private static readonly Guid ReservationId = Guid.Parse("55555555-5555-5555-5555-555555555555");
         private static readonly Guid AdminUserId = Guid.Parse("66666666-6666-6666-6666-666666666666");
+        private static readonly Guid ManagerUserId = Guid.Parse("33333333-3333-3333-3333-333333333333");
+        private static readonly Guid GuestUserId = Guid.Parse("44444444-4444-4444-4444-444444444444");
 
         public static async Task SeedAsync(IServiceProvider services, CancellationToken cancellationToken = default)
         {
@@ -28,8 +28,8 @@ namespace hms.Infrastructure.Persistence.Seeding
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             await SeedRolesAsync(roleManager);
-            await SeedUsersAsync(userManager);
-            await SeedDomainDataAsync(dbContext, cancellationToken);
+            var seededUsers = await SeedUsersAsync(userManager);
+            await SeedDomainDataAsync(dbContext, seededUsers.ManagerUserId, seededUsers.GuestUserId, cancellationToken);
         }
 
         private static async Task SeedRolesAsync(RoleManager<IdentityRole<Guid>> roleManager)
@@ -52,9 +52,9 @@ namespace hms.Infrastructure.Persistence.Seeding
             }
         }
 
-        private static async Task SeedUsersAsync(UserManager<ApplicationUser> userManager)
+        private static async Task<SeededUsers> SeedUsersAsync(UserManager<ApplicationUser> userManager)
         {
-            await SeedUserAsync(
+            var adminUser = await SeedUserAsync(
                 userManager,
                 AdminUserId,
                 "admin",
@@ -66,7 +66,7 @@ namespace hms.Infrastructure.Persistence.Seeding
                 null,
                 AppRole.Admin);
 
-            await SeedUserAsync(
+            var managerUser = await SeedUserAsync(
                 userManager,
                 ManagerUserId,
                 "manager",
@@ -78,7 +78,7 @@ namespace hms.Infrastructure.Persistence.Seeding
                 "+995555000001",
                 AppRole.Manager);
 
-            await SeedUserAsync(
+            var guestUser = await SeedUserAsync(
                 userManager,
                 GuestUserId,
                 "guest",
@@ -89,9 +89,11 @@ namespace hms.Infrastructure.Persistence.Seeding
                 "00000000003",
                 "+995555000002",
                 AppRole.Guest);
+
+            return new SeededUsers(adminUser.Id, managerUser.Id, guestUser.Id);
         }
 
-        private static async Task SeedUserAsync(
+        private static async Task<ApplicationUser> SeedUserAsync(
             UserManager<ApplicationUser> userManager,
             Guid userId,
             string userName,
@@ -103,7 +105,8 @@ namespace hms.Infrastructure.Persistence.Seeding
             string phoneNumber,
             AppRole role)
         {
-            var user = await userManager.FindByNameAsync(userName)
+            var user = await userManager.Users.FirstOrDefaultAsync(x => x.Id == userId)
+                ?? await userManager.FindByNameAsync(userName)
                 ?? await userManager.FindByEmailAsync(email);
 
             if (user is null)
@@ -139,9 +142,15 @@ namespace hms.Infrastructure.Persistence.Seeding
                     throw new InvalidOperationException($"Failed to assign {role.ToRoleName()} role: {errors}");
                 }
             }
+
+            return user;
         }
 
-        private static async Task SeedDomainDataAsync(HmsDbContext dbContext, CancellationToken cancellationToken)
+        private static async Task SeedDomainDataAsync(
+            HmsDbContext dbContext,
+            Guid managerUserId,
+            Guid guestUserId,
+            CancellationToken cancellationToken)
         {
             if (!await dbContext.Hotels.AnyAsync(x => x.Id == HotelId, cancellationToken))
             {
@@ -167,13 +176,13 @@ namespace hms.Infrastructure.Persistence.Seeding
             }
 
             if (!await dbContext.HotelManagers.AnyAsync(
-                x => x.HotelId == HotelId && x.ManagerUserId == ManagerUserId,
+                x => x.HotelId == HotelId && x.ManagerUserId == managerUserId,
                 cancellationToken))
             {
                 dbContext.HotelManagers.Add(new HotelManager
                 {
                     HotelId = HotelId,
-                    ManagerUserId = ManagerUserId
+                    ManagerUserId = managerUserId
                 });
             }
 
@@ -184,7 +193,7 @@ namespace hms.Infrastructure.Persistence.Seeding
                     Id = ReservationId,
                     CheckInDate = new DateTime(2026, 3, 10),
                     CheckOutDate = new DateTime(2026, 3, 12),
-                    GuestId = GuestUserId
+                    GuestId = guestUserId
                 });
             }
 
@@ -204,5 +213,7 @@ namespace hms.Infrastructure.Persistence.Seeding
                 await dbContext.SaveChangesAsync(cancellationToken);
             }
         }
+
+        private readonly record struct SeededUsers(Guid AdminUserId, Guid ManagerUserId, Guid GuestUserId);
     }
 }

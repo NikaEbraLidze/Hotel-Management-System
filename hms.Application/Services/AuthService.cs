@@ -3,6 +3,7 @@ using hms.Application.Models.DTO;
 using hms.Domain.Identity;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
+using hms.Application.Validation;
 
 namespace hms.Application.Services
 {
@@ -26,13 +27,7 @@ namespace hms.Application.Services
 
         public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO loginRequestDTO)
         {
-            ArgumentNullException.ThrowIfNull(loginRequestDTO);
-
-            if (string.IsNullOrWhiteSpace(loginRequestDTO.Email))
-                throw new ArgumentException("Email is required.", nameof(loginRequestDTO));
-
-            if (string.IsNullOrWhiteSpace(loginRequestDTO.Password))
-                throw new ArgumentException("Password is required.", nameof(loginRequestDTO));
+            AuthValidation.ValidateLoginRequest(loginRequestDTO);
 
             var email = loginRequestDTO.Email.Trim();
             var user = await _users.GetUserByEmailAsync(email)
@@ -63,7 +58,7 @@ namespace hms.Application.Services
 
         private async Task<string> RegisterAsync(RegistrationRequestDTO registrationRequestDTO, AppRole role)
         {
-            ValidateRegistrationRequest(registrationRequestDTO);
+            AuthValidation.ValidateRegistrationRequest(registrationRequestDTO);
 
             var user = _mapper.Map<ApplicationUser>(registrationRequestDTO);
 
@@ -74,29 +69,6 @@ namespace hms.Application.Services
             ThrowIfIdentityOperationFailed(addToRoleResult, $"Failed to assign {role.ToRoleName()} role");
 
             return user.Id.ToString();
-        }
-
-        private static void ValidateRegistrationRequest(RegistrationRequestDTO registrationRequestDTO)
-        {
-            ArgumentNullException.ThrowIfNull(registrationRequestDTO);
-
-            if (string.IsNullOrWhiteSpace(registrationRequestDTO.FirstName))
-                throw new ArgumentException("First name is required.", nameof(registrationRequestDTO));
-
-            if (string.IsNullOrWhiteSpace(registrationRequestDTO.LastName))
-                throw new ArgumentException("Last name is required.", nameof(registrationRequestDTO));
-
-            if (string.IsNullOrWhiteSpace(registrationRequestDTO.Email))
-                throw new ArgumentException("Email is required.", nameof(registrationRequestDTO));
-
-            if (string.IsNullOrWhiteSpace(registrationRequestDTO.Password))
-                throw new ArgumentException("Password is required.", nameof(registrationRequestDTO));
-
-            if (string.IsNullOrWhiteSpace(registrationRequestDTO.PersonalNumber))
-                throw new ArgumentException("Personal number is required.", nameof(registrationRequestDTO));
-
-            if (string.IsNullOrWhiteSpace(registrationRequestDTO.PhoneNumber))
-                throw new ArgumentException("Phone number is required.", nameof(registrationRequestDTO));
         }
 
         private static void ThrowIfIdentityOperationFailed(IdentityResult result, string errorPrefix)
