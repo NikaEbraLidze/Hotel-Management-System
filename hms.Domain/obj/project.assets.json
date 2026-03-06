@@ -864,11 +864,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Domain\\hms.Domain.csproj",
+      "projectUniqueName": "C:\\Development\\Hotel-Management-System\\hms.Domain\\hms.Domain.csproj",
       "projectName": "hms.Domain",
-      "projectPath": "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Domain\\hms.Domain.csproj",
+      "projectPath": "C:\\Development\\Hotel-Management-System\\hms.Domain\\hms.Domain.csproj",
       "packagesPath": "C:\\Users\\Nika\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Domain\\obj\\",
+      "outputPath": "C:\\Development\\Hotel-Management-System\\hms.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Nika\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZgmKz2knJLM=",
+  "dgSpecHash": "0yIUn6czoGE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Application\\hms.Application.csproj",
+  "projectFilePath": "C:\\Development\\Hotel-Management-System\\hms.Application\\hms.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nika\\.nuget\\packages\\fluentvalidation\\11.9.0\\fluentvalidation.11.9.0.nupkg.sha512",
     "C:\\Users\\Nika\\.nuget\\packages\\mapster\\7.4.0\\mapster.7.4.0.nupkg.sha512",

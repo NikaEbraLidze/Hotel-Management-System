@@ -3938,11 +3938,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Api\\hms.Api.csproj",
+      "projectUniqueName": "C:\\Development\\Hotel-Management-System\\hms.Api\\hms.Api.csproj",
       "projectName": "hms.Api",
-      "projectPath": "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Api\\hms.Api.csproj",
+      "projectPath": "C:\\Development\\Hotel-Management-System\\hms.Api\\hms.Api.csproj",
       "packagesPath": "C:\\Users\\Nika\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Api\\obj\\",
+      "outputPath": "C:\\Development\\Hotel-Management-System\\hms.Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Nika\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -3957,11 +3957,11 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Application\\hms.Application.csproj": {
-              "projectPath": "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Application\\hms.Application.csproj"
+            "C:\\Development\\Hotel-Management-System\\hms.Application\\hms.Application.csproj": {
+              "projectPath": "C:\\Development\\Hotel-Management-System\\hms.Application\\hms.Application.csproj"
             },
-            "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Infrastructure\\hms.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\Nika\\Desktop\\Hotels Management System\\hms.Infrastructure\\hms.Infrastructure.csproj"
+            "C:\\Development\\Hotel-Management-System\\hms.Infrastructure\\hms.Infrastructure.csproj": {
+              "projectPath": "C:\\Development\\Hotel-Management-System\\hms.Infrastructure\\hms.Infrastructure.csproj"
             }
           }
         }

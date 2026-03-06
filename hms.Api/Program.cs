@@ -21,6 +21,7 @@ using Mapster;
 using MapsterMapper;
 using hms.Application.Mapping;
 using hms.Api.Swagger;
+using hms.Api.Middlewares;
 
 namespace hms.Api
 {
@@ -146,6 +147,7 @@ namespace hms.Api
                 await HmsDbSeeder.SeedAsync(app.Services);
             }
 
+            app.UseMiddleware<GlobalExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

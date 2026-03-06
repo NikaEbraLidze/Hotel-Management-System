@@ -22,13 +22,12 @@ namespace hms.Api.Controllers
         public async Task<IActionResult> RegisterGuestAsync([FromBody] RegistrationRequestDTO registrationRequestDTO)
         {
             var userId = await _authService.RegisterGuestAsync(registrationRequestDTO);
-            return StatusCode(Convert.ToInt32(HttpStatusCode.Created), new CommonResponse
-            {
-                IsSuccess = true,
-                Message = "Guest registered successfully.",
-                StatusCode = HttpStatusCode.Created,
-                Data = new { UserId = userId }
-            });
+            var response = CommonResponse.Success(
+                new { UserId = userId },
+                "Guest registered successfully.",
+                HttpStatusCode.Created);
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpPost("register/admin")]
@@ -36,13 +35,12 @@ namespace hms.Api.Controllers
         public async Task<IActionResult> RegisterAdminAsync([FromBody] RegistrationRequestDTO registrationRequestDTO)
         {
             var userId = await _authService.RegisterAdminAsync(registrationRequestDTO);
-            return StatusCode(Convert.ToInt32(HttpStatusCode.Created), new CommonResponse
-            {
-                IsSuccess = true,
-                Message = "Admin registered successfully.",
-                StatusCode = HttpStatusCode.Created,
-                Data = new { UserId = userId }
-            });
+            var response = CommonResponse.Success(
+                new { UserId = userId },
+                "Admin registered successfully.",
+                HttpStatusCode.Created);
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpPost("register/manager")]
@@ -50,26 +48,23 @@ namespace hms.Api.Controllers
         public async Task<IActionResult> RegisterManagerAsync([FromBody] RegistrationRequestDTO registrationRequestDTO)
         {
             var userId = await _authService.RegisterManagerAsync(registrationRequestDTO);
-            return StatusCode(Convert.ToInt32(HttpStatusCode.Created), new CommonResponse
-            {
-                IsSuccess = true,
-                Message = "Manager registered successfully.",
-                StatusCode = HttpStatusCode.Created,
-                Data = new { UserId = userId }
-            });
+            var response = CommonResponse.Success(
+                new { UserId = userId },
+                "Manager registered successfully.",
+                HttpStatusCode.Created);
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDTO loginRequestDTO)
         {
             var loginResponse = await _authService.LoginAsync(loginRequestDTO);
-            return StatusCode(Convert.ToInt32(HttpStatusCode.OK), new CommonResponse
-            {
-                IsSuccess = true,
-                Message = "User logged in successfully.",
-                StatusCode = HttpStatusCode.OK,
-                Data = loginResponse
-            });
+            var response = CommonResponse.Success(
+                loginResponse,
+                "User logged in successfully.");
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
     }

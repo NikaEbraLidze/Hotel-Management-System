@@ -4,6 +4,7 @@ using hms.Domain.Identity;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using hms.Application.Validation;
+using hms.Application.Models.Exceptions;
 
 namespace hms.Application.Services
 {
@@ -76,8 +77,11 @@ namespace hms.Application.Services
             if (result.Succeeded)
                 return;
 
-            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            throw new InvalidOperationException($"{errorPrefix}: {errors}");
+            var errors = result.Errors
+                .Select(e => $"{errorPrefix}: {e.Description}")
+                .ToList();
+
+            throw new IdentityOperationException(errors);
         }
     }
 }
