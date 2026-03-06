@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using Mapster;
 using MapsterMapper;
 using hms.Application.Mapping;
+using hms.Api.Swagger;
 
 namespace hms.Api
 {
@@ -52,6 +53,18 @@ namespace hms.Api
                     Version = "v1",
                     Description = "Hotels Management System (HMS) API"
                 });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter JWT token. You can paste only the token or use: Bearer {token}"
+                });
+
+                options.OperationFilter<AuthorizeOperationFilter>();
             });
             #endregion
 
