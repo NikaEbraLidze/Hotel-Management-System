@@ -15,6 +15,7 @@ namespace hms.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Rating).IsRequired();
             builder.Property(x => x.Address).IsRequired().HasMaxLength(200);
             builder.Property(x => x.City).IsRequired().HasMaxLength(200);
+            builder.Property(x => x.Country).IsRequired().HasMaxLength(200);
 
             // Relationships
             builder.HasMany(h => h.Rooms)

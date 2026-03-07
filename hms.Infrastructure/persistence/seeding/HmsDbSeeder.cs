@@ -160,7 +160,8 @@ namespace hms.Infrastructure.Persistence.Seeding
                     Name = "Sunrise Hotel",
                     Rating = 4,
                     Address = "12 Rustaveli Ave",
-                    City = "Tbilisi"
+                    City = "Tbilisi",
+                    Country = "Georgia"
                 });
             }
 

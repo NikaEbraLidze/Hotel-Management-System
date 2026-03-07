@@ -22,6 +22,7 @@ using MapsterMapper;
 using hms.Application.Mapping;
 using hms.Api.Swagger;
 using hms.Api.Middlewares;
+using hms.Application.Contracts.Repository;
 
 namespace hms.Api
 {
@@ -91,11 +92,13 @@ namespace hms.Api
 
             #region Repositories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IHotelRepository, HotelRepository>();
             #endregion
 
             #region Services
             builder.Services.AddScoped<IJWTTokenGenerator, JWTTokenGenerator>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IHotelService, HotelService>();
             #endregion
 
             #region JWT Authentication

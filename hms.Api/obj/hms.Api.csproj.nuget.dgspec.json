@@ -1231,7 +1231,7 @@
         "projectUniqueName": "C:\\Development\\Hotel-Management-System\\hms.Infrastructure\\hms.Infrastructure.csproj",
         "projectName": "hms.Infrastructure",
         "projectPath": "C:\\Development\\Hotel-Management-System\\hms.Infrastructure\\hms.Infrastructure.csproj",
-        "packagesPath": "c:\\Development\\Hotel-Management-System\\.dotnet\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\Nika\\.nuget\\packages\\",
         "outputPath": "C:\\Development\\Hotel-Management-System\\hms.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [

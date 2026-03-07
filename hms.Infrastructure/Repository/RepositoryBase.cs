@@ -1,16 +1,17 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using hms.Application.Contracts.Repository;
+using hms.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace hms.Infrastructure.Repository
 {
-    public class RepositoryBase<T, TContext> : IRepositoryBase<T, TContext> where T : class where TContext : DbContext
+    public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        private readonly TContext _context;
-        private readonly DbSet<T> _dbSet;
+        protected readonly HmsDbContext _context;
+        protected readonly DbSet<T> _dbSet;
 
-        public RepositoryBase(TContext context)
+        public RepositoryBase(HmsDbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
