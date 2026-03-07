@@ -4950,7 +4950,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Nika\\.nuget\\packages\\": {}
+    "c:\\Development\\Hotel-Management-System\\.dotnet\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -4958,7 +4958,7 @@
       "projectUniqueName": "C:\\Development\\Hotel-Management-System\\hms.Infrastructure\\hms.Infrastructure.csproj",
       "projectName": "hms.Infrastructure",
       "projectPath": "C:\\Development\\Hotel-Management-System\\hms.Infrastructure\\hms.Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\Nika\\.nuget\\packages\\",
+      "packagesPath": "c:\\Development\\Hotel-Management-System\\.dotnet\\.nuget\\packages\\",
       "outputPath": "C:\\Development\\Hotel-Management-System\\hms.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [

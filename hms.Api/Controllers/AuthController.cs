@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using hms.Application.Contracts.Service;
 using hms.Application.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace hms.Api.Controllers
 {
@@ -13,6 +15,7 @@ namespace hms.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+
         public AuthController(IAuthService authService)
         {
             _authService = authService;
@@ -21,9 +24,9 @@ namespace hms.Api.Controllers
         [HttpPost("register/guest")]
         public async Task<IActionResult> RegisterGuestAsync([FromBody] RegistrationRequestDTO registrationRequestDTO)
         {
-            var userId = await _authService.RegisterGuestAsync(registrationRequestDTO);
+            var registrationResponse = await _authService.RegisterGuestAsync(registrationRequestDTO);
             var response = CommonResponse.Success(
-                new { UserId = userId },
+                registrationResponse,
                 "Guest registered successfully.",
                 HttpStatusCode.Created);
 
@@ -34,9 +37,9 @@ namespace hms.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdminAsync([FromBody] RegistrationRequestDTO registrationRequestDTO)
         {
-            var userId = await _authService.RegisterAdminAsync(registrationRequestDTO);
+            var registrationResponse = await _authService.RegisterAdminAsync(registrationRequestDTO);
             var response = CommonResponse.Success(
-                new { UserId = userId },
+                registrationResponse,
                 "Admin registered successfully.",
                 HttpStatusCode.Created);
 
@@ -47,9 +50,9 @@ namespace hms.Api.Controllers
         [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> RegisterManagerAsync([FromBody] RegistrationRequestDTO registrationRequestDTO)
         {
-            var userId = await _authService.RegisterManagerAsync(registrationRequestDTO);
+            var registrationResponse = await _authService.RegisterManagerAsync(registrationRequestDTO);
             var response = CommonResponse.Success(
-                new { UserId = userId },
+                registrationResponse,
                 "Manager registered successfully.",
                 HttpStatusCode.Created);
 

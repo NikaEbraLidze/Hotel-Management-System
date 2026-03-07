@@ -48,16 +48,16 @@ namespace hms.Application.Services
 
         }
 
-        public Task<string> RegisterAdminAsync(RegistrationRequestDTO registrationRequestDTO)
+        public Task<RegistrationResponseDTO> RegisterAdminAsync(RegistrationRequestDTO registrationRequestDTO)
             => RegisterAsync(registrationRequestDTO, AppRole.Admin);
 
-        public Task<string> RegisterGuestAsync(RegistrationRequestDTO registrationRequestDTO)
+        public Task<RegistrationResponseDTO> RegisterGuestAsync(RegistrationRequestDTO registrationRequestDTO)
             => RegisterAsync(registrationRequestDTO, AppRole.Guest);
 
-        public Task<string> RegisterManagerAsync(RegistrationRequestDTO registrationRequestDTO)
+        public Task<RegistrationResponseDTO> RegisterManagerAsync(RegistrationRequestDTO registrationRequestDTO)
             => RegisterAsync(registrationRequestDTO, AppRole.Manager);
 
-        private async Task<string> RegisterAsync(RegistrationRequestDTO registrationRequestDTO, AppRole role)
+        private async Task<RegistrationResponseDTO> RegisterAsync(RegistrationRequestDTO registrationRequestDTO, AppRole role)
         {
             AuthValidation.ValidateRegistrationRequest(registrationRequestDTO);
 
@@ -69,7 +69,10 @@ namespace hms.Application.Services
             var addToRoleResult = await _users.AddToRoleAsync(user, role.ToRoleName());
             ThrowIfIdentityOperationFailed(addToRoleResult, $"Failed to assign {role.ToRoleName()} role");
 
-            return user.Id.ToString();
+            return new RegistrationResponseDTO
+            {
+                UserId = user.Id.ToString()
+            };
         }
 
         private static void ThrowIfIdentityOperationFailed(IdentityResult result, string errorPrefix)
