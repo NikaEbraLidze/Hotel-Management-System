@@ -10,6 +10,7 @@ x86/
 artifacts/
 out/
 publish/
+.dotnet/
 
 # .NET user-specific files
 *.rsuser
