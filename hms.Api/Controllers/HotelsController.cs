@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using hms.Application.Contracts.Service;
 using hms.Application.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hms.Api.Controllers
@@ -44,6 +45,7 @@ namespace hms.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterHotelAsync([FromBody] RegisterHotelRequestDTO request)
         {
             var hotel = await _hotelService.RegisterHotelAsync(request);
@@ -52,6 +54,35 @@ namespace hms.Api.Controllers
                 hotel,
                 "Hotel registered successfully.",
                 HttpStatusCode.Created);
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
+        [HttpPut("{Id:guid}")]
+        [Authorize(Roles = "Admin,Manager")]
+        public async Task<IActionResult> UpdateHotelAsync([FromRoute] Guid Id, [FromBody] UpdateHotelRequestDTO request)
+        {
+            var hotel = await _hotelService.UpdateHotelAsync(Id, request);
+
+            var response = CommonResponse.Success(
+                hotel,
+                "Hotel updated successfully",
+                HttpStatusCode.OK);
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
+        [HttpDelete("{Id:guid}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteHotelAsync([FromRoute] Guid Id)
+        {
+            await _hotelService.DeleteHotelAsync(Id);
+
+            var response = CommonResponse.Success(
+                null,
+                "Hotel deleted successfully",
+                HttpStatusCode.OK
+            );
 
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }

@@ -62,7 +62,7 @@ namespace hms.Application.Services
 
         public async Task<GetHotelByIdResponseDTO> GetHotelByIdAsync(Guid request)
         {
-            HotelValidation.ValidateGetHotelByIdRequest(request);
+            HotelValidation.ValidateGuid(request);
 
             var hotel = await _hotelRepository.GetAsync(h => h.Id == request)
                 ?? throw new NotFoundException($"Hotel with ID {request} not found.");
@@ -81,6 +81,36 @@ namespace hms.Application.Services
                 ?? throw new NotFoundException("Failed to retrieve the created hotel.");
 
             return _mapper.Map<RegisterHotelResponseDTO>(createdHotel);
+        }
+
+        public async Task<UpdateHotelResponseDTO> UpdateHotelAsync(Guid id, UpdateHotelRequestDTO request)
+        {
+            HotelValidation.ValidateUpdateHotelRequest(id, request);
+
+            var hotel = await _hotelRepository.GetAsync(h => h.Id == id)
+                ?? throw new NotFoundException($"Hotel with ID {id} not found.");
+
+            hotel.Name = request.Name ?? hotel.Name;
+            hotel.Rating = request.Rating ?? hotel.Rating;
+            hotel.Address = request.Address ?? hotel.Address;
+            hotel.City = request.City ?? hotel.City;
+            hotel.Country = request.Country ?? hotel.Country;
+
+            _hotelRepository.UpdateAsync(hotel);
+            await _hotelRepository.SaveAsync();
+
+            return _mapper.Map<UpdateHotelResponseDTO>(hotel);
+        }
+
+        public async Task DeleteHotelAsync(Guid id)
+        {
+            HotelValidation.ValidateGuid(id);
+
+            var hotel = await _hotelRepository.GetAsync(h => h.Id == id)
+                ?? throw new NotFoundException($"Hotel with ID {id} not found.");
+
+            _hotelRepository.DeleteAsync(hotel);
+            await _hotelRepository.SaveAsync();
         }
     }
 }

@@ -27,6 +27,13 @@ namespace hms.Application.Mapping
                 .Map(dest => dest.City, src => src.City)
                 .Map(dest => dest.Country, src => src.Country);
 
+            config.NewConfig<Hotel, UpdateHotelResponseDTO>()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.Rating, src => src.Rating)
+                .Map(dest => dest.Address, src => src.Address)
+                .Map(dest => dest.City, src => src.City)
+                .Map(dest => dest.Country, src => src.Country);
         }
     }
 }

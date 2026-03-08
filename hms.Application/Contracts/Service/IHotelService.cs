@@ -7,5 +7,7 @@ namespace hms.Application.Contracts.Service
         Task<PagedResponseDTO<GetHotelsResponseDTO>> GetHotelsAsync(GetHotelsRequestDTO request);
         Task<GetHotelByIdResponseDTO> GetHotelByIdAsync(Guid request);
         Task<RegisterHotelResponseDTO> RegisterHotelAsync(RegisterHotelRequestDTO request);
+        Task<UpdateHotelResponseDTO> UpdateHotelAsync(Guid id, UpdateHotelRequestDTO request);
+        Task DeleteHotelAsync(Guid request);
     }
 }

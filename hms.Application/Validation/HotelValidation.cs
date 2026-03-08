@@ -23,10 +23,26 @@ namespace hms.Application.Validation
             nameof(Hotel.Country)
         };
 
-        public static void ValidateGetHotelByIdRequest(Guid request)
+        public static void ValidateGuid(Guid request)
         {
             if (request == Guid.Empty)
                 throw new BadRequestException("Hotel ID must be provided.");
+        }
+
+        public static void ValidateUpdateHotelRequest(Guid id, UpdateHotelRequestDTO request)
+        {
+            ValidateGuid(id);
+
+            if (request is null)
+                throw new BadRequestException("Request body is required.");
+
+            if (request.Rating.HasValue && (request.Rating.Value < MinRating || request.Rating.Value > MaxRating))
+                throw new BadRequestException($"Rating must be between {MinRating} and {MaxRating}.");
+
+            ValidateMaxLength(request.Name, "Name", NameMaxLength);
+            ValidateMaxLength(request.Address, "Address", AddressMaxLength);
+            ValidateMaxLength(request.City, "City", CityMaxLength);
+            ValidateMaxLength(request.Country, "Country", CountryMaxLength);
         }
 
         public static void ValidateGetHotelsRequest(GetHotelsRequestDTO request)
