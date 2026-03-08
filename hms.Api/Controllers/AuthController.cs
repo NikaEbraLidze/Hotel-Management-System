@@ -12,11 +12,11 @@ namespace hms.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class authController : ControllerBase
     {
         private readonly IAuthService _authService;
 
-        public AuthController(IAuthService authService)
+        public authController(IAuthService authService)
         {
             _authService = authService;
         }

@@ -5,6 +5,7 @@ namespace hms.Application.Contracts.Service
     public interface IHotelService
     {
         Task<PagedResponseDTO<GetHotelsResponseDTO>> GetHotelsAsync(GetHotelsRequestDTO request);
+        Task<GetHotelByIdResponseDTO> GetHotelByIdAsync(Guid request);
         Task<RegisterHotelResponseDTO> RegisterHotelAsync(RegisterHotelRequestDTO request);
     }
 }

@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using hms.Application.Contracts.Repository;
 using hms.Application.Contracts.Service;
 using hms.Application.Models.DTO;
+using hms.Application.Models.Exceptions;
 using hms.Application.Validation;
 using hms.Domain.Entities;
 using MapsterMapper;
@@ -59,6 +60,16 @@ namespace hms.Application.Services
             return response;
         }
 
+        public async Task<GetHotelByIdResponseDTO> GetHotelByIdAsync(Guid request)
+        {
+            HotelValidation.ValidateGetHotelByIdRequest(request);
+
+            var hotel = await _hotelRepository.GetAsync(h => h.Id == request)
+                ?? throw new NotFoundException($"Hotel with ID {request} not found.");
+
+            return _mapper.Map<GetHotelByIdResponseDTO>(hotel);
+        }
+
         public async Task<RegisterHotelResponseDTO> RegisterHotelAsync(RegisterHotelRequestDTO request)
         {
             HotelValidation.ValidateRegisterHotelRequest(request);
@@ -67,7 +78,7 @@ namespace hms.Application.Services
             await _hotelRepository.AddAsync(hotel);
             await _hotelRepository.SaveAsync();
             var createdHotel = await _hotelRepository.GetAsync(h => h.Name == hotel.Name && h.Address == hotel.Address)
-                ?? throw new Exception("Failed to retrieve the created hotel.");
+                ?? throw new NotFoundException("Failed to retrieve the created hotel.");
 
             return _mapper.Map<RegisterHotelResponseDTO>(createdHotel);
         }

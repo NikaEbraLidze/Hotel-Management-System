@@ -41,7 +41,7 @@ namespace hms.Api
             mapsterConfig.Scan(typeof(MappingAssemblyMarker).Assembly);
 
             builder.Services.AddSingleton(mapsterConfig);
-            builder.Services.AddScoped<MapsterMapper.IMapper, ServiceMapper>();
+            builder.Services.AddScoped<IMapper, ServiceMapper>();
             #endregion
 
             #region Swagger

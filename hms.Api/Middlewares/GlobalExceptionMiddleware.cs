@@ -44,6 +44,10 @@ namespace hms.Api.Middlewares
                     new[] { unauthorizedAccessException.Message },
                     unauthorizedAccessException.Message,
                     HttpStatusCode.Unauthorized),
+                NotFoundException notFoundException => CommonResponse.Fail(
+                    new[] { notFoundException.Message },
+                    notFoundException.Message,
+                    HttpStatusCode.NotFound),
                 IdentityOperationException identityOperationException => CommonResponse.Fail(
                     identityOperationException.Errors,
                     identityOperationException.Message,
