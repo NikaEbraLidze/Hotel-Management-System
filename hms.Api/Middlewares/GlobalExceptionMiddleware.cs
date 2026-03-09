@@ -43,6 +43,7 @@ namespace hms.Api.Middlewares
                 case ArgumentException:
                 case BadRequestException:
                 case UnauthorizedAccessException:
+                case ForbiddenException:
                 case NotFoundException:
                 case ConflictException:
                 case IdentityOperationException:
@@ -70,6 +71,10 @@ namespace hms.Api.Middlewares
                     new[] { unauthorizedAccessException.Message },
                     unauthorizedAccessException.Message,
                     HttpStatusCode.Unauthorized),
+                ForbiddenException forbiddenException => CommonResponse.Fail(
+                    new[] { forbiddenException.Message },
+                    forbiddenException.Message,
+                    HttpStatusCode.Forbidden),
                 NotFoundException notFoundException => CommonResponse.Fail(
                     new[] { notFoundException.Message },
                     notFoundException.Message,

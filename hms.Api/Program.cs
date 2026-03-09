@@ -94,6 +94,7 @@ namespace hms.Api
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IHotelRepository, HotelRepository>();
             builder.Services.AddScoped<IRoomsRepository, RoomsRepository>();
+            builder.Services.AddScoped<IReservationsRepository, ReservationsRepository>();
             builder.Services.AddScoped<IGuestsRepository, GuestsRepository>();
             builder.Services.AddScoped<IManagersRepository, ManagersRepository>();
             builder.Services.AddScoped<IHotelManagersRepository, HotelManagersRepository>();
@@ -105,6 +106,7 @@ namespace hms.Api
             builder.Services.AddScoped<IHotelService, HotelService>();
             builder.Services.AddScoped<IHotelManagersService, HotelManagersService>();
             builder.Services.AddScoped<IRoomsService, RoomsService>();
+            builder.Services.AddScoped<IReservationsService, ReservationsService>();
             builder.Services.AddScoped<IGuestsService, GuestsService>();
             #endregion
 
