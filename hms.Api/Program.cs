@@ -94,6 +94,7 @@ namespace hms.Api
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IHotelRepository, HotelRepository>();
             builder.Services.AddScoped<IRoomsRepository, RoomsRepository>();
+            builder.Services.AddScoped<IGuestsRepository, GuestsRepository>();
             #endregion
 
             #region Services
@@ -101,6 +102,7 @@ namespace hms.Api
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IHotelService, HotelService>();
             builder.Services.AddScoped<IRoomsService, RoomsService>();
+            builder.Services.AddScoped<IGuestsService, GuestsService>();
             #endregion
 
             #region JWT Authentication

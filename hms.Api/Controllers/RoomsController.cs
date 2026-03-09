@@ -1,5 +1,3 @@
-
-
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,11 +10,11 @@ namespace hms.Api.Controllers
 {
     [ApiController]
     [Route("api/{hotelId:guid}/[controller]")]
-    public class RoomsController : ControllerBase
+    public class roomsController : ControllerBase
     {
         private readonly IRoomsService _roomsService;
 
-        public RoomsController(IRoomsService roomsService)
+        public roomsController(IRoomsService roomsService)
         {
             _roomsService = roomsService;
         }
