@@ -107,7 +107,14 @@ namespace hms.Application.Services
             var hotelManager = await _hotelManagersRepository.GetByHotelAndManagerIdAsync(hotelId, managerId, tracking: true)
                 ?? throw new NotFoundException($"Manager with ID {managerId} not found for hotel {hotelId}.");
 
+            var managersCount = await _hotelManagersRepository.CountByHotelIdAsync(hotelId);
+
+            if (managersCount <= 1)
+                throw new ConflictException(
+                    $"Manager with ID {managerId} cannot be deleted because hotel {hotelId} must have at least one manager.");
+
             _hotelManagersRepository.DeleteAsync(hotelManager);
+
             await _hotelManagersRepository.SaveAsync();
         }
 

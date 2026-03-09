@@ -11,6 +11,11 @@ namespace hms.Infrastructure.Repository
         {
         }
 
+        public Task<int> CountByHotelIdAsync(Guid hotelId)
+        {
+            return _dbSet.CountAsync(hotelManager => hotelManager.HotelId == hotelId);
+        }
+
         public async Task<List<HotelManager>> GetByHotelIdAsync(Guid hotelId, bool tracking = false)
         {
             IQueryable<HotelManager> query = _dbSet
