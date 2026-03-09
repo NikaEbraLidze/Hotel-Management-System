@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using hms.Application.Contracts.Service;
 using hms.Application.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hms.Api.Controllers
@@ -19,7 +20,7 @@ namespace hms.Api.Controllers
         }
 
         [HttpGet]
-        // [Authorize(Roles = "Admin,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> GetGuestsAsync()
         {
             var guests = await _guestsService.GetGuestsAsync();
@@ -33,7 +34,7 @@ namespace hms.Api.Controllers
         }
 
         [HttpGet("{guestId:guid}")]
-        // [Authorize(Roles = "Admin,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> GetGuestByIdAsync([FromRoute] Guid guestId)
         {
             var guest = await _guestsService.GetGuestByIdAsync(guestId);
@@ -47,7 +48,7 @@ namespace hms.Api.Controllers
         }
 
         [HttpPut("{guestId:guid}")]
-        // [Authorize(Roles = "Admin,Manager")]
+        [Authorize(Roles = "Guest")]
         public async Task<IActionResult> UpdateGuestAsync(
             [FromRoute] Guid guestId,
             [FromBody] UpdateGuestRequestDTO request)
@@ -63,7 +64,7 @@ namespace hms.Api.Controllers
         }
 
         [HttpDelete("{guestId:guid}")]
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteGuestAsync([FromRoute] Guid guestId)
         {
             await _guestsService.DeleteGuestAsync(guestId);

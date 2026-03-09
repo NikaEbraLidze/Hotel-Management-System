@@ -95,12 +95,15 @@ namespace hms.Api
             builder.Services.AddScoped<IHotelRepository, HotelRepository>();
             builder.Services.AddScoped<IRoomsRepository, RoomsRepository>();
             builder.Services.AddScoped<IGuestsRepository, GuestsRepository>();
+            builder.Services.AddScoped<IManagersRepository, ManagersRepository>();
+            builder.Services.AddScoped<IHotelManagersRepository, HotelManagersRepository>();
             #endregion
 
             #region Services
             builder.Services.AddScoped<IJWTTokenGenerator, JWTTokenGenerator>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IHotelService, HotelService>();
+            builder.Services.AddScoped<IHotelManagersService, HotelManagersService>();
             builder.Services.AddScoped<IRoomsService, RoomsService>();
             builder.Services.AddScoped<IGuestsService, GuestsService>();
             #endregion
