@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using hms.Api;
 using hms.Application.Models.Exceptions;
@@ -36,7 +37,10 @@ namespace hms.Api.Middlewares
 
         private void LogException(HttpContext context, Exception ex)
         {
-            const string message = "Request {Method} {Path} failed.";
+            var statusCode = GetStatusCode(ex);
+            var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous";
+            const string message =
+                "Request {Method} {Path} failed with {StatusCode}. TraceId: {TraceId}, UserId: {UserId}";
 
             switch (ex)
             {
@@ -47,10 +51,24 @@ namespace hms.Api.Middlewares
                 case NotFoundException:
                 case ConflictException:
                 case IdentityOperationException:
-                    _logger.LogWarning(ex, message, context.Request.Method, context.Request.Path);
+                    _logger.LogWarning(
+                        ex,
+                        message,
+                        context.Request.Method,
+                        context.Request.Path,
+                        (int)statusCode,
+                        context.TraceIdentifier,
+                        userId);
                     break;
                 default:
-                    _logger.LogError(ex, message, context.Request.Method, context.Request.Path);
+                    _logger.LogError(
+                        ex,
+                        message,
+                        context.Request.Method,
+                        context.Request.Path,
+                        (int)statusCode,
+                        context.TraceIdentifier,
+                        userId);
                     break;
             }
         }
@@ -97,6 +115,21 @@ namespace hms.Api.Middlewares
             context.Response.StatusCode = Convert.ToInt32(apiResponse.StatusCode);
 
             return context.Response.WriteAsJsonAsync(apiResponse);
+        }
+
+        private static HttpStatusCode GetStatusCode(Exception ex)
+        {
+            return ex switch
+            {
+                ArgumentException => HttpStatusCode.BadRequest,
+                BadRequestException => HttpStatusCode.BadRequest,
+                UnauthorizedAccessException => HttpStatusCode.Unauthorized,
+                ForbiddenException => HttpStatusCode.Forbidden,
+                NotFoundException => HttpStatusCode.NotFound,
+                ConflictException => HttpStatusCode.Conflict,
+                IdentityOperationException => HttpStatusCode.BadRequest,
+                _ => HttpStatusCode.InternalServerError
+            };
         }
     }
 }

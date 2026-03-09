@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,7 @@ using Mapster;
 using MapsterMapper;
 using hms.Application.Mapping;
 using hms.Api.Swagger;
+using hms.Api.Filters;
 using hms.Api.Middlewares;
 using hms.Application.Contracts.Repository;
 
@@ -33,7 +35,11 @@ namespace hms.Api
             var builder = WebApplication.CreateBuilder(args);
 
             #region Controllers
-            builder.Services.AddControllers();
+            builder.Services.AddScoped<RequestLoggingActionFilter>();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.AddService<RequestLoggingActionFilter>();
+            });
             #endregion
 
             #region Mapster
@@ -143,6 +149,9 @@ namespace hms.Api
             #endregion
 
             var app = builder.Build();
+            app.Logger.LogInformation(
+                "Starting HMS API in {Environment} environment.",
+                app.Environment.EnvironmentName);
 
             #region Middleware Pipeline
             if (app.Environment.IsDevelopment())
@@ -153,6 +162,7 @@ namespace hms.Api
 
             if (app.Environment.IsDevelopment())
             {
+                app.Logger.LogInformation("Applying database migrations and seeding development data.");
                 using var scope = app.Services.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<HmsDbContext>();
                 await db.Database.MigrateAsync();
@@ -166,6 +176,7 @@ namespace hms.Api
             app.MapControllers();
             #endregion
 
+            app.Logger.LogInformation("HMS API is ready to accept requests.");
             await app.RunAsync();
         }
     }
