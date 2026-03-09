@@ -55,6 +55,22 @@ namespace hms.Api.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [HttpGet("reservations")]
+        [Authorize(Roles = "Guest")]
+        public async Task<IActionResult> GetMyReservationsAsync()
+        {
+            var guestId = GetCurrentUserId();
+
+            var reservations = await _reservationsService.GetMyReservationsAsync(guestId);
+
+            var response = CommonResponse.Success(
+                reservations,
+                "Your reservations retrieved successfully.",
+                HttpStatusCode.OK);
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
         [HttpPut("reservations/{reservationId:guid}")]
         [Authorize(Roles = "Guest")]
         public async Task<IActionResult> UpdateReservationAsync(

@@ -26,6 +26,23 @@ namespace hms.Infrastructure.Repository
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<List<Reservation>> GetGuestReservationsAsync(Guid guestId, bool tracking = false)
+        {
+            IQueryable<Reservation> query = _dbSet
+                .Include(reservation => reservation.Guest)
+                .Include(reservation => reservation.ReservationRooms)
+                    .ThenInclude(reservationRoom => reservationRoom.Room)
+                .Where(reservation => reservation.GuestId == guestId)
+                .OrderBy(reservation => reservation.CheckInDate)
+                .ThenBy(reservation => reservation.Id)
+                .AsSplitQuery();
+
+            if (!tracking)
+                query = query.AsNoTracking();
+
+            return await query.ToListAsync();
+        }
+
         public async Task<(List<Reservation> Items, int TotalCount)> GetHotelReservationsAsync(
             Guid hotelId,
             DateTime? checkInFrom = null,

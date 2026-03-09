@@ -8,6 +8,7 @@ namespace hms.Application.Contracts.Service
             Guid hotelId,
             Guid guestId,
             CreateReservationRequestDTO request);
+        Task<List<GetReservationResponseDTO>> GetMyReservationsAsync(Guid guestId);
         Task<GetReservationResponseDTO> GetReservationByIdAsync(Guid reservationId, Guid guestId);
         Task<GetReservationResponseDTO> UpdateReservationAsync(
             Guid reservationId,

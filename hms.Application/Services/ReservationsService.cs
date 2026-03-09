@@ -62,6 +62,14 @@ namespace hms.Application.Services
             return _mapper.Map<GetReservationResponseDTO>(createdReservation);
         }
 
+        public async Task<List<GetReservationResponseDTO>> GetMyReservationsAsync(Guid guestId)
+        {
+            await EnsureGuestExistsAsync(guestId);
+
+            var reservations = await _reservationsRepository.GetGuestReservationsAsync(guestId, tracking: false);
+            return _mapper.Map<List<GetReservationResponseDTO>>(reservations);
+        }
+
         public async Task<GetReservationResponseDTO> GetReservationByIdAsync(Guid reservationId, Guid guestId)
         {
             ReservationsValidation.ValidateReservationId(reservationId);

@@ -5,6 +5,7 @@ namespace hms.Application.Contracts.Repository
     public interface IReservationsRepository : IRepositoryBase<Reservation>
     {
         Task<Reservation> GetByIdWithDetailsAsync(Guid reservationId, bool tracking = false);
+        Task<List<Reservation>> GetGuestReservationsAsync(Guid guestId, bool tracking = false);
         Task<(List<Reservation> Items, int TotalCount)> GetHotelReservationsAsync(
             Guid hotelId,
             DateTime? checkInFrom = null,
