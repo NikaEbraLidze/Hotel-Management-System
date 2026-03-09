@@ -165,8 +165,9 @@ namespace hms.Application.Services
 
             var rooms = await _reservationsRepository.GetAvailableRoomsAsync(
                 hotelId,
-                request.CheckInDate.Date,
-                request.CheckOutDate.Date);
+                DateTime.UtcNow,
+                request.CheckInDate?.Date,
+                request.CheckOutDate?.Date);
 
             return _mapper.Map<List<GetRoomsResponseDTO>>(rooms);
         }

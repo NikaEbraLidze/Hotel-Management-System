@@ -122,15 +122,32 @@ namespace hms.Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public Task<List<Room>> GetAvailableRoomsAsync(Guid hotelId, DateTime checkInDate, DateTime checkOutDate)
+        public Task<List<Room>> GetAvailableRoomsAsync(
+            Guid hotelId,
+            DateTime currentDate,
+            DateTime? checkInDate = null,
+            DateTime? checkOutDate = null)
         {
-            return _context.Rooms
+            var query = _context.Rooms
                 .AsNoTracking()
-                .Where(room =>
-                    room.HotelId == hotelId &&
+                .Where(room => room.HotelId == hotelId);
+
+            if (checkInDate.HasValue && checkOutDate.HasValue)
+            {
+                query = query.Where(room =>
                     !room.ReservationRooms.Any(reservationRoom =>
-                        reservationRoom.Reservation.CheckInDate < checkOutDate &&
-                        checkInDate < reservationRoom.Reservation.CheckOutDate))
+                        reservationRoom.Reservation.CheckInDate < checkOutDate.Value &&
+                        checkInDate.Value < reservationRoom.Reservation.CheckOutDate));
+            }
+            else
+            {
+                query = query.Where(room =>
+                    !room.ReservationRooms.Any(reservationRoom =>
+                        reservationRoom.Reservation.CheckInDate <= currentDate &&
+                        currentDate < reservationRoom.Reservation.CheckOutDate));
+            }
+
+            return query
                 .OrderBy(room => room.Name)
                 .ToListAsync();
         }

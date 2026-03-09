@@ -23,6 +23,10 @@ namespace hms.Application.Contracts.Repository
             DateTime checkInDate,
             DateTime checkOutDate,
             Guid? excludeReservationId = null);
-        Task<List<Room>> GetAvailableRoomsAsync(Guid hotelId, DateTime checkInDate, DateTime checkOutDate);
+        Task<List<Room>> GetAvailableRoomsAsync(
+            Guid hotelId,
+            DateTime currentDate,
+            DateTime? checkInDate = null,
+            DateTime? checkOutDate = null);
     }
 }

@@ -63,7 +63,8 @@ namespace hms.Application.Validation
             if (request is null)
                 throw new BadRequestException("Request query is required.");
 
-            ValidateReservationDates(request.CheckInDate, request.CheckOutDate);
+            if (request.CheckInDate.HasValue && request.CheckOutDate.HasValue)
+                ValidateReservationDates(request.CheckInDate.Value, request.CheckOutDate.Value);
         }
 
         private static void ValidateReservationDates(DateTime checkInDate, DateTime checkOutDate)
