@@ -1,11 +1,9 @@
 namespace hms.Application.Models.DTO
 {
-    public class GetHotelsRequestDTO
+    public class GetRoomsRequestDTO
     {
         public string Name { get; set; }
-        public byte? Rating { get; set; }
-        public string City { get; set; }
-        public string Country { get; set; }
+        public decimal? Price { get; set; }
 
         public int? PageNumber { get; set; }
         public int? PageSize { get; set; }

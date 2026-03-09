@@ -4,16 +4,21 @@ using System.Threading.Tasks;
 using hms.Api;
 using hms.Application.Models.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace hms.Api.Middlewares
 {
     public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<GlobalExceptionMiddleware> _logger;
 
-        public GlobalExceptionMiddleware(RequestDelegate next)
+        public GlobalExceptionMiddleware(
+            RequestDelegate next,
+            ILogger<GlobalExceptionMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -24,7 +29,28 @@ namespace hms.Api.Middlewares
             }
             catch (Exception ex)
             {
+                LogException(context, ex);
                 await HandleExceptionAsync(context, ex);
+            }
+        }
+
+        private void LogException(HttpContext context, Exception ex)
+        {
+            const string message = "Request {Method} {Path} failed.";
+
+            switch (ex)
+            {
+                case ArgumentException:
+                case BadRequestException:
+                case UnauthorizedAccessException:
+                case NotFoundException:
+                case ConflictException:
+                case IdentityOperationException:
+                    _logger.LogWarning(ex, message, context.Request.Method, context.Request.Path);
+                    break;
+                default:
+                    _logger.LogError(ex, message, context.Request.Method, context.Request.Path);
+                    break;
             }
         }
 
@@ -48,6 +74,10 @@ namespace hms.Api.Middlewares
                     new[] { notFoundException.Message },
                     notFoundException.Message,
                     HttpStatusCode.NotFound),
+                ConflictException conflictException => CommonResponse.Fail(
+                    new[] { conflictException.Message },
+                    conflictException.Message,
+                    HttpStatusCode.Conflict),
                 IdentityOperationException identityOperationException => CommonResponse.Fail(
                     identityOperationException.Errors,
                     identityOperationException.Message,
