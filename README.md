@@ -147,20 +147,20 @@ Hotel-Management-System/
 
 Below are the main NuGet packages used in the solution and their responsibilities.
 
-| Package | Purpose |
-| --- | --- |
-| `Microsoft.EntityFrameworkCore` | Core ORM used for data access and entity tracking. |
-| `Microsoft.EntityFrameworkCore.SqlServer` | SQL Server provider for Entity Framework Core. |
-| `Microsoft.EntityFrameworkCore.Design` | Design-time support for EF Core tooling and migrations. |
-| `Microsoft.EntityFrameworkCore.Tools` | Command-line tooling support for managing migrations and database updates. |
-| `Microsoft.AspNetCore.Identity.EntityFrameworkCore` | Integrates ASP.NET Identity with EF Core-backed stores. |
-| `Microsoft.AspNetCore.Authentication.JwtBearer` | Enables JWT bearer token authentication for secured API endpoints. |
-| `System.IdentityModel.Tokens.Jwt` | Provides JWT token creation and token handling support. |
-| `Mapster` | Maps entities to DTOs and request/response models. |
-| `Mapster.DependencyInjection` | Integrates Mapster with the dependency injection container. |
-| `FluentValidation` | Defines validation rules for application requests and models. |
-| `FluentValidation.AspNetCore` | Adds FluentValidation integration to ASP.NET Core. |
-| `Swashbuckle.AspNetCore` | Generates Swagger / OpenAPI documentation and UI. |
+| Package                                             | Purpose                                                                    |
+| --------------------------------------------------- | -------------------------------------------------------------------------- |
+| `Microsoft.EntityFrameworkCore`                     | Core ORM used for data access and entity tracking.                         |
+| `Microsoft.EntityFrameworkCore.SqlServer`           | SQL Server provider for Entity Framework Core.                             |
+| `Microsoft.EntityFrameworkCore.Design`              | Design-time support for EF Core tooling and migrations.                    |
+| `Microsoft.EntityFrameworkCore.Tools`               | Command-line tooling support for managing migrations and database updates. |
+| `Microsoft.AspNetCore.Identity.EntityFrameworkCore` | Integrates ASP.NET Identity with EF Core-backed stores.                    |
+| `Microsoft.AspNetCore.Authentication.JwtBearer`     | Enables JWT bearer token authentication for secured API endpoints.         |
+| `System.IdentityModel.Tokens.Jwt`                   | Provides JWT token creation and token handling support.                    |
+| `Mapster`                                           | Maps entities to DTOs and request/response models.                         |
+| `Mapster.DependencyInjection`                       | Integrates Mapster with the dependency injection container.                |
+| `FluentValidation`                                  | Defines validation rules for application requests and models.              |
+| `FluentValidation.AspNetCore`                       | Adds FluentValidation integration to ASP.NET Core.                         |
+| `Swashbuckle.AspNetCore`                            | Generates Swagger / OpenAPI documentation and UI.                          |
 
 ---
 
@@ -359,11 +359,3 @@ Possible future enhancements for the project include:
 
 **Nika Ebralidze**  
 Full Stack Developer
-
----
-
-## License
-
-This project is intended to be released under the **MIT License**.
-
-Add a `LICENSE` file with the full MIT license text before public distribution.
