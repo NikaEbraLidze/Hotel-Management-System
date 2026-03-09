@@ -19,6 +19,21 @@ namespace hms.Api.Controllers
             _roomsService = roomsService;
         }
 
+        [HttpGet("available")]
+        public async Task<IActionResult> GetAvailableRooms(
+            [FromRoute] Guid hotelId,
+            [FromQuery] GetAvailableRoomsRequestDTO request)
+        {
+            var rooms = await _roomsService.GetAvailableRoomsAsync(hotelId, request);
+
+            var response = CommonResponse.Success(
+                rooms,
+                "Available rooms retrieved successfully.",
+                HttpStatusCode.OK);
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetRooms(
             [FromRoute] Guid hotelId,

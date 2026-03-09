@@ -44,9 +44,32 @@ namespace hms.Application.Validation
             if (request.Price.HasValue)
                 ValidatePrice(request.Price.Value, "Price filter");
 
+            if (request.MinPrice.HasValue)
+                ValidatePrice(request.MinPrice.Value, "Min price filter");
+
+            if (request.MaxPrice.HasValue)
+                ValidatePrice(request.MaxPrice.Value, "Max price filter");
+
+            if (request.MinPrice.HasValue && request.MaxPrice.HasValue && request.MinPrice.Value > request.MaxPrice.Value)
+                throw new BadRequestException("Min price must be less than or equal to max price.");
+
             ValidatePaging(request.PageNumber, request.PageSize);
             ValidateMaxLength(request.Name, "Name filter", NameMaxLength);
             ValidateOrderBy(request.OrderBy);
+        }
+
+        public static void ValidateGetAvailableRoomsRequest(Guid hotelId, GetAvailableRoomsRequestDTO request)
+        {
+            ValidateHotelId(hotelId);
+
+            if (request is null)
+                throw new BadRequestException("Request body is required.");
+
+            if (request.CheckIn.HasValue ^ request.CheckOut.HasValue)
+                throw new BadRequestException("Check-in and check-out must be provided together.");
+
+            if (request.CheckIn.HasValue && request.CheckOut.HasValue && request.CheckOut.Value <= request.CheckIn.Value)
+                throw new BadRequestException("Check-out must be greater than check-in.");
         }
 
         public static void ValidateCreateRoomRequest(Guid hotelId, CreateRoomRequestDTO request)

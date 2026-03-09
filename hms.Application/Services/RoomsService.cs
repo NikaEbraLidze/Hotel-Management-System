@@ -33,7 +33,9 @@ namespace hms.Application.Services
             Expression<Func<Room, bool>> filter = room =>
                 room.HotelId == hotelId &&
                 (string.IsNullOrEmpty(normalizedName) || room.Name.Contains(normalizedName)) &&
-                (!request.Price.HasValue || room.Price == request.Price.Value);
+                (!request.Price.HasValue || room.Price == request.Price.Value) &&
+                (!request.MinPrice.HasValue || room.Price >= request.MinPrice.Value) &&
+                (!request.MaxPrice.HasValue || room.Price <= request.MaxPrice.Value);
 
             var rooms = await _roomsRepository.GetAllAsync(
                 filter: filter,
@@ -50,6 +52,22 @@ namespace hms.Application.Services
                 PageNumber = request.PageNumber ?? 1,
                 PageSize = request.PageSize ?? rooms.Items.Count
             };
+        }
+
+        public async Task<List<GetRoomsResponseDTO>> GetAvailableRoomsAsync(Guid hotelId, GetAvailableRoomsRequestDTO request)
+        {
+            request ??= new GetAvailableRoomsRequestDTO();
+
+            RoomsValidation.ValidateGetAvailableRoomsRequest(hotelId, request);
+            await EnsureHotelExistsAsync(hotelId);
+
+            var availableRooms = await _roomsRepository.GetAvailableRoomsAsync(
+                hotelId,
+                DateTime.UtcNow,
+                request.CheckIn,
+                request.CheckOut);
+
+            return _mapper.Map<List<GetRoomsResponseDTO>>(availableRooms);
         }
 
         public async Task<GetRoomsResponseDTO> GetRoomByIdAsync(Guid hotelId, Guid roomId)
