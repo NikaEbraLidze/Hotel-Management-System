@@ -46,6 +46,9 @@ TestResults/
 
 # ASP.NET temporary files
 app_offline.htm
+hms.Api/appsettings.Development.json
+hms.Api/appsettings.Local.json
+hms.Api/appsettings.json
 
 # OS-generated files
 .DS_Store

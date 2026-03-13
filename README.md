@@ -247,6 +247,14 @@ Application settings are stored in:
 hms.Api/appsettings.json
 ```
 
+Tracked configuration files in this repository must contain only safe placeholder values. The reference template is:
+
+```text
+hms.Api/appsettings.Example.json
+```
+
+`appsettings.Example.json` is only a template/reference file. It is not real secret storage.
+
 The most important configuration values are:
 
 - **Connection String**
@@ -260,22 +268,46 @@ Example configuration:
 ```json
 {
   "JwtOptions": {
-    "Secret": "your-super-secure-secret-key",
+    "Secret": "your-super-strong-jwt-secret-key-here",
     "Issuer": "HMS_API",
     "Audience": "HMS_CLIENT",
     "ExpiryMinutes": 60
   },
   "ConnectionStrings": {
     "HmsDb": "Server=YOUR_SERVER;Database=HotelsManagementSystem;Trusted_Connection=True;TrustServerCertificate=True;"
+  },
+  "CloudinarySettings": {
+    "CloudName": "your-cloudinary-cloud-name",
+    "ApiKey": "your-cloudinary-api-key",
+    "ApiSecret": "your-cloudinary-api-secret"
   }
 }
 ```
+
+For local development, the default approach is `.NET User Secrets`:
+
+```bash
+dotnet user-secrets init --project hms.Api
+dotnet user-secrets set "JwtOptions:Secret" "your-actual-local-jwt-secret" --project hms.Api
+dotnet user-secrets set "ConnectionStrings:HmsDb" "Server=YOUR_SERVER;Database=HotelsManagementSystem;Trusted_Connection=True;TrustServerCertificate=True;" --project hms.Api
+dotnet user-secrets set "CloudinarySettings:CloudName" "your-actual-cloudinary-cloud-name" --project hms.Api
+dotnet user-secrets set "CloudinarySettings:ApiKey" "your-actual-cloudinary-api-key" --project hms.Api
+dotnet user-secrets set "CloudinarySettings:ApiSecret" "your-actual-cloudinary-api-secret" --project hms.Api
+```
+
+`hms.Api/appsettings.Development.json` should remain local-only and is ignored by Git.
 
 For production environments, sensitive values should be stored outside source control by using:
 
 - Environment variables
 - Secret managers
 - `.NET User Secrets`
+
+If real secrets were previously committed, treat them as compromised and rotate them:
+
+- JWT secret
+- Cloudinary API secret
+- Database credentials, if the connection string contained real credentials
 
 ---
 
