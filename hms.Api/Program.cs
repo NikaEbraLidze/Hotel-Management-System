@@ -25,6 +25,7 @@ using hms.Api.Swagger;
 using hms.Api.Filters;
 using hms.Api.Middlewares;
 using hms.Application.Contracts.Repository;
+using CloudinaryDotNet;
 
 namespace hms.Api
 {
@@ -114,6 +115,7 @@ namespace hms.Api
             builder.Services.AddScoped<IRoomsService, RoomsService>();
             builder.Services.AddScoped<IReservationsService, ReservationsService>();
             builder.Services.AddScoped<IGuestsService, GuestsService>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
             #endregion
 
             #region JWT Authentication
@@ -146,6 +148,26 @@ namespace hms.Api
             {
                 options.TokenLifespan = TimeSpan.FromHours(3);
             });
+            #endregion
+
+            #region Cloudinary Settings
+            builder.Services.Configure<CloudinarySettings>(
+                builder.Configuration.GetSection("CloudinarySettings")
+            );
+
+            var cloudinarySettings = builder.Configuration
+                .GetSection("CloudinarySettings")
+                .Get<CloudinarySettings>();
+
+            var account = new Account(
+                cloudinarySettings.CloudName,
+                cloudinarySettings.ApiKey,
+                cloudinarySettings.ApiSecret
+            );
+
+            var cloudinary = new Cloudinary(account);
+
+            builder.Services.AddSingleton(cloudinary);
             #endregion
 
             var app = builder.Build();
