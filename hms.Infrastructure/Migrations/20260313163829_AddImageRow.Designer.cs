@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hms.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using hms.Infrastructure.Persistence;
 namespace hms.Infrastructure.Migrations
 {
     [DbContext(typeof(HmsDbContext))]
-    partial class HmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260313163829_AddImageRow")]
+    partial class AddImageRow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
