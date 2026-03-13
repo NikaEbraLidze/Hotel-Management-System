@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using hms.Application.Contracts.Service;
 using hms.Application.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hms.Api.Controllers
@@ -46,9 +47,12 @@ namespace hms.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RegisterHotelAsync([FromBody] RegisterHotelRequestDTO request)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> RegisterHotelAsync(
+            [FromForm] RegisterHotelRequestDTO request,
+            IFormFile image)
         {
-            var hotel = await _hotelService.RegisterHotelAsync(request);
+            var hotel = await _hotelService.RegisterHotelAsync(request, image);
 
             var response = CommonResponse.Success(
                 hotel,
@@ -60,9 +64,13 @@ namespace hms.Api.Controllers
 
         [HttpPut("{Id:guid}")]
         [Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> UpdateHotelAsync([FromRoute] Guid Id, [FromBody] UpdateHotelRequestDTO request)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateHotelAsync(
+            [FromRoute] Guid Id,
+            [FromForm] UpdateHotelRequestDTO request,
+            IFormFile image)
         {
-            var hotel = await _hotelService.UpdateHotelAsync(Id, request);
+            var hotel = await _hotelService.UpdateHotelAsync(Id, request, image);
 
             var response = CommonResponse.Success(
                 hotel,

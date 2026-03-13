@@ -17,7 +17,9 @@ namespace hms.Application.Mapping
                 .Map(dest => dest.Country, src => src.Country == null ? null : src.Country.Trim());
 
             config.NewConfig<Hotel, RegisterHotelResponseDTO>()
-                .Map(dest => dest.Id, src => src.Id);
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.ImageUrl, src => src.ImageUrl)
+                .Map(dest => dest.ImagePublicId, src => src.ImgPublicId);
 
             config.NewConfig<Hotel, GetHotelByIdResponseDTO>()
                 .Map(dest => dest.Id, src => src.Id)
@@ -25,7 +27,9 @@ namespace hms.Application.Mapping
                 .Map(dest => dest.Rating, src => src.Rating)
                 .Map(dest => dest.Address, src => src.Address)
                 .Map(dest => dest.City, src => src.City)
-                .Map(dest => dest.Country, src => src.Country);
+                .Map(dest => dest.Country, src => src.Country)
+                .Map(dest => dest.ImageUrl, src => src.ImageUrl)
+                .Map(dest => dest.ImagePublicId, src => src.ImgPublicId);
 
             config.NewConfig<Hotel, UpdateHotelResponseDTO>()
                 .Map(dest => dest.Id, src => src.Id)
@@ -33,7 +37,9 @@ namespace hms.Application.Mapping
                 .Map(dest => dest.Rating, src => src.Rating)
                 .Map(dest => dest.Address, src => src.Address)
                 .Map(dest => dest.City, src => src.City)
-                .Map(dest => dest.Country, src => src.Country);
+                .Map(dest => dest.Country, src => src.Country)
+                .Map(dest => dest.ImageUrl, src => src.ImageUrl)
+                .Map(dest => dest.ImagePublicId, src => src.ImgPublicId);
         }
     }
 }

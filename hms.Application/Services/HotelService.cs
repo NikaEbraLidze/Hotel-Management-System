@@ -6,6 +6,7 @@ using hms.Application.Models.Exceptions;
 using hms.Application.Validation;
 using hms.Domain.Entities;
 using MapsterMapper;
+using Microsoft.AspNetCore.Http;
 
 namespace hms.Application.Services
 {
@@ -13,10 +14,12 @@ namespace hms.Application.Services
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IMapper _mapper;
-        public HotelService(IHotelRepository hotelRepository, IMapper mapper)
+        private readonly ICloudinaryService _cloudinaryService;
+        public HotelService(IHotelRepository hotelRepository, IMapper mapper, ICloudinaryService cloudinaryService)
         {
             _hotelRepository = hotelRepository;
             _mapper = mapper;
+            _cloudinaryService = cloudinaryService;
         }
         public async Task<PagedResponseDTO<GetHotelsResponseDTO>> GetHotelsAsync(GetHotelsRequestDTO request)
         {
@@ -50,7 +53,9 @@ namespace hms.Application.Services
                     Rating = h.Rating,
                     Address = h.Address,
                     City = h.City,
-                    Country = h.Country
+                    Country = h.Country,
+                    ImageUrl = h.ImageUrl,
+                    ImagePublicId = h.ImgPublicId
                 }).ToList(),
                 TotalCount = result.TotalCount,
                 PageNumber = request.PageNumber ?? 1,
@@ -70,11 +75,14 @@ namespace hms.Application.Services
             return _mapper.Map<GetHotelByIdResponseDTO>(hotel);
         }
 
-        public async Task<RegisterHotelResponseDTO> RegisterHotelAsync(RegisterHotelRequestDTO request)
+        public async Task<RegisterHotelResponseDTO> RegisterHotelAsync(RegisterHotelRequestDTO request, IFormFile image)
         {
             HotelValidation.ValidateRegisterHotelRequest(request);
 
             var hotel = _mapper.Map<Hotel>(request);
+
+            await ApplyHotelImageAsync(hotel, image);
+
             await _hotelRepository.AddAsync(hotel);
             await _hotelRepository.SaveAsync();
             var createdHotel = await _hotelRepository.GetAsync(h => h.Name == hotel.Name && h.Address == hotel.Address)
@@ -83,7 +91,7 @@ namespace hms.Application.Services
             return _mapper.Map<RegisterHotelResponseDTO>(createdHotel);
         }
 
-        public async Task<UpdateHotelResponseDTO> UpdateHotelAsync(Guid id, UpdateHotelRequestDTO request)
+        public async Task<UpdateHotelResponseDTO> UpdateHotelAsync(Guid id, UpdateHotelRequestDTO request, IFormFile image)
         {
             HotelValidation.ValidateUpdateHotelRequest(id, request);
 
@@ -95,6 +103,7 @@ namespace hms.Application.Services
             hotel.Address = request.Address ?? hotel.Address;
             hotel.City = request.City ?? hotel.City;
             hotel.Country = request.Country ?? hotel.Country;
+            await ApplyHotelImageAsync(hotel, image);
 
             _hotelRepository.UpdateAsync(hotel);
             await _hotelRepository.SaveAsync();
@@ -111,6 +120,19 @@ namespace hms.Application.Services
 
             _hotelRepository.DeleteAsync(hotel);
             await _hotelRepository.SaveAsync();
+        }
+
+        private async Task ApplyHotelImageAsync(Hotel hotel, IFormFile image)
+        {
+            if (image == null)
+                return;
+
+            var uploadResult = string.IsNullOrWhiteSpace(hotel.ImgPublicId)
+                ? await _cloudinaryService.UploadImageAsync(image)
+                : await _cloudinaryService.UpdateImageAsync(hotel.ImgPublicId, image);
+
+            hotel.ImageUrl = uploadResult.Url;
+            hotel.ImgPublicId = uploadResult.PublicId;
         }
     }
 }
