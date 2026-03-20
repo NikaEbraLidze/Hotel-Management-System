@@ -11,6 +11,7 @@ artifacts/
 out/
 publish/
 .dotnet/
+.dotnet-cli/
 
 # .NET user-specific files
 *.rsuser
@@ -21,7 +22,8 @@ publish/
 
 # Visual Studio / VS Code / Rider
 .vs/
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 .idea/
 *.DotSettings.user
 
@@ -54,3 +56,4 @@ hms.Api/appsettings.json
 .DS_Store
 Thumbs.db
 Desktop.ini
+

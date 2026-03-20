@@ -3,4 +3,5 @@
   <Project Path="hms.Application/hms.Application.csproj" />
   <Project Path="hms.Domain/hms.Domain.csproj" />
   <Project Path="hms.Infrastructure/hms.Infrastructure.csproj" />
+  <Project Path="tests/hms.Application.Tests/hms.Application.Tests.csproj" />
 </Solution>
