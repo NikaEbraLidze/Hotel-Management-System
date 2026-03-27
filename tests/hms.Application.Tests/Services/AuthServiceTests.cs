@@ -1,3 +1,4 @@
+using hms.Application.Configuration;
 using hms.Application.Contracts.Service;
 using hms.Application.Models.DTO;
 using hms.Application.Models.Exceptions;
@@ -6,6 +7,7 @@ using hms.Application.Tests.Common;
 using hms.Domain.Identity;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace hms.Application.Tests.Services;
@@ -14,12 +16,18 @@ public class AuthServiceTests
 {
     private readonly Mock<IUserRepository> _users = new();
     private readonly Mock<IJWTTokenGenerator> _jwt = new();
+    private readonly Mock<IEmailService> _email = new();
     private readonly IMapper _mapper = MapsterTestMapperFactory.Create();
+    private readonly IOptions<AppUrlConfiguration> _appUrlConfiguration = Options.Create(new AppUrlConfiguration
+    {
+        ApiBaseUrl = "https://localhost:7061"
+    });
 
     [Fact]
     public async Task LoginAsync_ReturnsToken_WhenCredentialsAreValid()
     {
         var user = TestDataFactory.CreateUser(email: "guest@example.com");
+        user.EmailConfirmed = true;
         var request = new LoginRequestDTO
         {
             Email = " guest@example.com ",
@@ -61,6 +69,7 @@ public class AuthServiceTests
     public async Task LoginAsync_ThrowsUnauthorized_WhenPasswordIsInvalid()
     {
         var user = TestDataFactory.CreateUser(email: "guest@example.com");
+        user.EmailConfirmed = true;
 
         _users.Setup(repository => repository.GetUserByEmailAsync(user.Email))
             .ReturnsAsync(user);
@@ -75,6 +84,26 @@ public class AuthServiceTests
         }));
 
         Assert.Equal("Invalid credentials.", exception.Message);
+    }
+
+    [Fact]
+    public async Task LoginAsync_ThrowsUnauthorized_WhenEmailIsNotConfirmed()
+    {
+        var user = TestDataFactory.CreateUser(email: "guest@example.com");
+
+        _users.Setup(repository => repository.GetUserByEmailAsync(user.Email))
+            .ReturnsAsync(user);
+        _users.Setup(repository => repository.CheckPasswordAsync(user, "Password123"))
+            .ReturnsAsync(true);
+
+        var service = CreateService();
+        var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.LoginAsync(new LoginRequestDTO
+        {
+            Email = user.Email,
+            Password = "Password123"
+        }));
+
+        Assert.Equal("Email address is not confirmed.", exception.Message);
     }
 
     [Fact]
@@ -101,6 +130,14 @@ public class AuthServiceTests
             .ReturnsAsync(IdentityResult.Success);
         _users.Setup(repository => repository.AddToRoleAsync(It.IsAny<ApplicationUser>(), AppRole.Guest.ToRoleName()))
             .ReturnsAsync(IdentityResult.Success);
+        _users.Setup(repository => repository.GenerateEmailConfirmationTokenAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync("token-value");
+        _email.Setup(service => service.SendEmailAsync(
+                "guest@example.com",
+                "Confirm your email",
+                It.Is<string>(body => body.Contains("confirm-email") && body.Contains("token-value")),
+                true))
+            .Returns(Task.CompletedTask);
 
         var service = CreateService();
         var result = await service.RegisterGuestAsync(request);
@@ -109,6 +146,7 @@ public class AuthServiceTests
         Assert.NotNull(capturedUser);
         Assert.Equal("guest@example.com", capturedUser.Email);
         Assert.Equal("guest@example.com", capturedUser.UserName);
+        _email.VerifyAll();
     }
 
     [Fact]
@@ -153,6 +191,21 @@ public class AuthServiceTests
         Assert.Contains("Failed to assign Guest role: Role assignment failed.", exception.Errors);
     }
 
-    private AuthService CreateService() => new(_users.Object, _jwt.Object, _mapper);
-}
+    [Fact]
+    public async Task ConfirmEmailAsync_ConfirmsUser_WhenTokenIsValid()
+    {
+        var userId = Guid.NewGuid();
+        var user = TestDataFactory.CreateUser(email: "guest@example.com");
+        user.Id = userId;
 
+        _users.Setup(repository => repository.GetUserByIdAsync(userId))
+            .ReturnsAsync(user);
+        _users.Setup(repository => repository.ConfirmEmailAsync(user, "token-value"))
+            .ReturnsAsync(IdentityResult.Success);
+
+        var service = CreateService();
+        await service.ConfirmEmailAsync(userId.ToString(), "token-value");
+    }
+
+    private AuthService CreateService() => new(_users.Object, _jwt.Object, _mapper, _email.Object, _appUrlConfiguration);
+}

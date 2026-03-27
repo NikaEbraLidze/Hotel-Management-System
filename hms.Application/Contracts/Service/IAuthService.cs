@@ -8,5 +8,6 @@ namespace hms.Application.Contracts.Service
         Task<RegistrationResponseDTO> RegisterGuestAsync(RegistrationRequestDTO registrationRequestDTO);
         Task<RegistrationResponseDTO> RegisterManagerAsync(RegistrationRequestDTO registrationRequestDTO);
         Task<RegistrationResponseDTO> RegisterAdminAsync(RegistrationRequestDTO registrationRequestDTO);
+        Task ConfirmEmailAsync(string userId, string token);
     }
 }

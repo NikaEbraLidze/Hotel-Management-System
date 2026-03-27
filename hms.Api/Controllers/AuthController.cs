@@ -70,5 +70,16 @@ namespace hms.Api.Controllers
             return StatusCode(Convert.ToInt32(response.StatusCode), response);
         }
 
+        [HttpGet("confirm-email")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string token)
+        {
+            await _authService.ConfirmEmailAsync(userId, token);
+            var response = CommonResponse.Success(
+                new { Confirmed = true },
+                "Email confirmed successfully.");
+
+            return StatusCode(Convert.ToInt32(response.StatusCode), response);
+        }
     }
 }

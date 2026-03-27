@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6k9SY713GNU=",
+  "dgSpecHash": "CmM/7MU11ag=",
   "success": true,
-  "projectFilePath": "c:\\Development\\Hotel-Management-System\\hms.Api\\hms.Api.csproj",
+  "projectFilePath": "C:\\Development\\Hotel-Management-System\\hms.Api\\hms.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nika\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\Nika\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",

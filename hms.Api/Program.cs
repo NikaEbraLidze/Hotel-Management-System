@@ -15,6 +15,7 @@ using hms.Infrastructure.Persistence.Seeding;
 using hms.Infrastructure.Repository;
 using hms.Application.Contracts.Service;
 using hms.Application.Services;
+using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -24,6 +25,7 @@ using hms.Application.Mapping;
 using hms.Api.Swagger;
 using hms.Api.Filters;
 using hms.Api.Middlewares;
+using hms.Api.Logging;
 using hms.Application.Contracts.Repository;
 using hms.Application.Configuration;
 using CloudinaryDotNet;
@@ -35,6 +37,12 @@ namespace hms.Api
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var logFilePath = Path.Combine(
+                builder.Environment.ContentRootPath,
+                "logs",
+                $"hms-api-{DateTime.UtcNow:yyyyMMdd}.log");
+
+            builder.Logging.AddProvider(new FileLoggerProvider(logFilePath));
 
             #region Controllers
             builder.Services.AddScoped<RequestLoggingActionFilter>();
@@ -93,6 +101,7 @@ namespace hms.Api
                     options.Password.RequiredLength = 6;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
+                    options.SignIn.RequireConfirmedEmail = true;
                 })
                 .AddEntityFrameworkStores<HmsDbContext>()
                 .AddDefaultTokenProviders();
@@ -179,6 +188,13 @@ namespace hms.Api
                 .Validate(
                     settings => !string.IsNullOrWhiteSpace(settings.Password),
                     "EmailConfiguration:Password is required.")
+                .ValidateOnStart();
+            #endregion
+
+            #region App URL Settings
+            builder.Services.AddOptions<AppUrlConfiguration>()
+                .Bind(builder.Configuration.GetSection("AppUrlConfiguration"))
+                .ValidateDataAnnotations()
                 .ValidateOnStart();
             #endregion
 
