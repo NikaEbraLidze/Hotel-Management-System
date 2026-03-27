@@ -25,6 +25,7 @@ using hms.Api.Swagger;
 using hms.Api.Filters;
 using hms.Api.Middlewares;
 using hms.Application.Contracts.Repository;
+using hms.Application.Configuration;
 using CloudinaryDotNet;
 
 namespace hms.Api
@@ -116,6 +117,7 @@ namespace hms.Api
             builder.Services.AddScoped<IReservationsService, ReservationsService>();
             builder.Services.AddScoped<IGuestsService, GuestsService>();
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
             #endregion
 
             #region JWT Authentication
@@ -168,6 +170,16 @@ namespace hms.Api
             var cloudinary = new Cloudinary(account);
 
             builder.Services.AddSingleton(cloudinary);
+            #endregion
+
+            #region Email Settings
+            builder.Services.AddOptions<EmailConfiguration>()
+                .Bind(builder.Configuration.GetSection("EmailConfiguration"))
+                .ValidateDataAnnotations()
+                .Validate(
+                    settings => !string.IsNullOrWhiteSpace(settings.Password),
+                    "EmailConfiguration:Password is required.")
+                .ValidateOnStart();
             #endregion
 
             var app = builder.Build();
